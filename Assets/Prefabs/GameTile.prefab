@@ -97,11 +97,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44a202d09eace6409bc5e1b9037f00a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 5
-  TileName: 98,98
-  X: 98
-  Y: 98
-  Left: 0
-  Right: 0
-  Up: 0
-  Down: 0
+  isAlive: 0
+  Coordinates:
+    X: 98
+    Y: 98
+  LeftNeighbor:
+    X: 97
+    Y: 98
+  RightNeighbor:
+    X: 99
+    Y: 98
+  AboveNeighbor:
+    X: 98
+    Y: 99
+  BelowNeighbor:
+    X: 98
+    Y: 97
