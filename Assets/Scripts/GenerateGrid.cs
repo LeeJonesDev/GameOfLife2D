@@ -5,16 +5,17 @@ using UnityEngine;
 
 public class GenerateGrid : MonoBehaviour
 {
+    public GameTile GameTilePrefab; // This object is will be generated for each tile
 
-    public GameTile GameTilePrefab;
+    public int GameWidth; // number of tiles
 
-    public int GameWidth;
+    public int GameHeight; // number of tiles
 
-    public int GameHeight;
+    public int TileWidth = 5; // how big the tiles are
 
-    public int TileWidth = 5;
-
-    // Start is called before the first frame update
+    /// <summary>
+    /// Generate the grid and initialize the camera
+    /// </summary>
     void Start()
     {
         SetupCamera();
@@ -51,12 +52,16 @@ public class GenerateGrid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This generates the initial grid
+    /// </summary>
     private void GenerateCartesianGrid()
     {
         for (var y = 0; y < (GameHeight - 1); y++)
         {
             for (var x = 0; x < (GameWidth - 1); x++)
             {
+                //calculate the position of the tile
                 Vector3 position;
                 position.x = TileWidth * x;
                 position.y = TileWidth * y;
@@ -68,33 +73,30 @@ public class GenerateGrid : MonoBehaviour
                 // note: only using width because these are square tiles
                 tile.transform.localScale = new Vector3(TileWidth, TileWidth, 1);
 
+                // set the base coordinates for the tile
                 tile.Coordinates = new CartesianCoordinates(x, y);
 
+                // change the name of the GameObject to be human readable
                 tile.gameObject.name = $"Tile - {x}, {y} ";
 
-                // TODO: handle grid edges
+                // TODO: handle grid edges?
+                // generate the neighbors
                 tile.AboveNeighbor = new CartesianCoordinates(x, y + 1);
                 tile.BelowNeighbor = new CartesianCoordinates(x, y - 1);
-
                 tile.RightNeighbor = new CartesianCoordinates(x + 1, y);
                 tile.LeftNeighbor = new CartesianCoordinates(x - 1, y);
 
-                // seed the grid
-                tile.isAlive = new System.Random().NextDouble() >= 0.5; //TESTING COLORS
+                // seed the grid with random starting data
+                tile.isAlive = new System.Random().NextDouble() >= 0.5;
 
 
                 //TODO: determine lifecycle
                 //Set lifecycle
                 if (tile.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
                 {
-                    if (!tile.isAlive)
-                    {
-                        spriteRenderer.color = Color.black;
-                    }
-                    else
-                    {
-                        spriteRenderer.color = Color.white;
-                    }
+                    spriteRenderer.color = !tile.isAlive
+                        ? Color.black
+                        : Color.white;
                 }
 
                 // TODO: can this be async?
