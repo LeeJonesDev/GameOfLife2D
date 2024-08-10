@@ -53,10 +53,14 @@ public class ButtonBehavior : MonoBehaviour
 
                 var tile = GameTilePrefab;
 
+
                 // note: only using width because these are square tiles
                 tile.transform.localScale = new Vector3(TileWidth, TileWidth, 1);
 
                 tile.Coordinates = new CartesianCoordinates(x, y);
+
+                tile.gameObject.name = $"Tile - {x}, {y} ";
+
 
                 // TODO: handle grid edges
                 tile.AboveNeighbor = new CartesianCoordinates(x, y + 1);
