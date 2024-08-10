@@ -11,5 +11,21 @@ public class GameTile : MonoBehaviour
     public CartesianCoordinates AboveNeighbor;
     public CartesianCoordinates BelowNeighbor;
 
-    //TODO: methods for onClick
+    public void DetermineLifecycle()
+    {
+        //TODO: determine lifecycle
+        //Set lifecycle
+        if (TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+        {
+            if (!isAlive)
+            {
+                spriteRenderer.color = Color.white;
+            }
+            else
+            {
+                spriteRenderer.color = Color.black;
+            }
+        }
+
+    }
 }
