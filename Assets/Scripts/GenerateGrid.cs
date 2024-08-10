@@ -57,9 +57,9 @@ public class GenerateGrid : MonoBehaviour
     /// </summary>
     private void GenerateCartesianGrid()
     {
-        for (var y = 0; y < (GameHeight - 1); y++)
+        for (var y = 0; y < GameHeight; y++)
         {
-            for (var x = 0; x < (GameWidth - 1); x++)
+            for (var x = 0; x < GameWidth; x++)
             {
                 //calculate the position of the tile
                 Vector3 position;
