@@ -51,21 +51,21 @@ public class ButtonBehavior : MonoBehaviour
                 position.y = TileWidth * y;
                 position.z = 0.1f;
 
-                var prefab = GameTilePrefab;
+                var tile = GameTilePrefab;
 
                 // note: only using width because these are square tiles
-                prefab.transform.localScale = new Vector3(TileWidth, TileWidth, 1);
+                tile.transform.localScale = new Vector3(TileWidth, TileWidth, 1);
 
-                prefab.Coordinates = new CartesianCoordinates(x, y);
+                tile.Coordinates = new CartesianCoordinates(x, y);
 
                 // TODO: handle grid edges
-                prefab.AboveNeighbor = new CartesianCoordinates(x, y + 1);
-                prefab.BelowNeighbor = new CartesianCoordinates(x, y - 1);
+                tile.AboveNeighbor = new CartesianCoordinates(x, y + 1);
+                tile.BelowNeighbor = new CartesianCoordinates(x, y - 1);
 
-                prefab.RightNeighbor = new CartesianCoordinates(x + 1, y);
-                prefab.LeftNeighbor = new CartesianCoordinates(x - 1, y);
+                tile.RightNeighbor = new CartesianCoordinates(x + 1, y);
+                tile.LeftNeighbor = new CartesianCoordinates(x - 1, y);
 
-                Instantiate(GameTilePrefab, position, Quaternion.identity);
+                Instantiate(tile, position, Quaternion.identity);
 
             }
         }
