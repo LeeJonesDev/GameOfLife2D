@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GenerateGrid : MonoBehaviour
@@ -50,6 +49,10 @@ public class GenerateGrid : MonoBehaviour
             var maxSize = Math.Max(GameWidth, GameHeight);
             cameraComponent.orthographicSize = TileWidth * maxSize / 2 + TileWidth;
         }
+        else
+        {
+            throw new MissingComponentException("missing camera on the main camera. we have a problem...");
+        }
     }
 
     /// <summary>
@@ -81,10 +84,10 @@ public class GenerateGrid : MonoBehaviour
 
                 // TODO: handle grid edges?
                 // generate the neighbors
-                tile.AboveNeighbor = new CartesianCoordinates(x, y + 1);
-                tile.BelowNeighbor = new CartesianCoordinates(x, y - 1);
-                tile.RightNeighbor = new CartesianCoordinates(x + 1, y);
-                tile.LeftNeighbor = new CartesianCoordinates(x - 1, y);
+                tile.AboveNeighborCoords = new CartesianCoordinates(x, y + 1);
+                tile.BelowNeighborCoords = new CartesianCoordinates(x, y - 1);
+                tile.RightNeighborCoords = new CartesianCoordinates(x + 1, y);
+                tile.LeftNeighborCoords = new CartesianCoordinates(x - 1, y);
 
                 // seed the grid with random starting data
                 tile.isAlive = new System.Random().NextDouble() >= 0.5;
@@ -98,11 +101,38 @@ public class GenerateGrid : MonoBehaviour
                         ? Color.black
                         : Color.white;
                 }
+                else
+                {
+                    throw new MissingComponentException("No SpriteRenderer on Grid Generator");
+                }
 
                 // TODO: can this be async?
                 Instantiate(tile, position, Quaternion.identity);
 
             }
+        }
+
+        // Note: aww, I just read unity is not thread safe, this should be parallel though.
+        //Set neighbor tiles
+        var gameTiles = FindObjectsOfType<GameTile>();
+        for (int i = 0; i < gameTiles.Length; i++)
+        {
+            GameTile tile = gameTiles[i];
+            tile.AboveNeighborTile = gameTiles.SingleOrDefault(t =>
+                t.Coordinates.X == tile.AboveNeighborCoords.X &&
+                t.Coordinates.Y == tile.AboveNeighborCoords.Y);
+
+            tile.BelowNeighborTile = gameTiles.SingleOrDefault(t =>
+                t.Coordinates.X == tile.BelowNeighborCoords.X &&
+                t.Coordinates.Y == tile.BelowNeighborCoords.Y);
+
+            tile.LeftNeighborTile = gameTiles.SingleOrDefault(t =>
+                t.Coordinates.X == tile.LeftNeighborCoords.X &&
+                t.Coordinates.Y == tile.LeftNeighborCoords.Y);
+
+            tile.RightNeighborTile = gameTiles.SingleOrDefault(t =>
+                t.Coordinates.X == tile.RightNeighborCoords.X &&
+                t.Coordinates.Y == tile.RightNeighborCoords.Y);
         }
     }
 }
