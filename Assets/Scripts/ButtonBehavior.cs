@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ButtonBehavior : MonoBehaviour
@@ -61,13 +62,31 @@ public class ButtonBehavior : MonoBehaviour
 
                 tile.gameObject.name = $"Tile - {x}, {y} ";
 
-
                 // TODO: handle grid edges
                 tile.AboveNeighbor = new CartesianCoordinates(x, y + 1);
                 tile.BelowNeighbor = new CartesianCoordinates(x, y - 1);
 
                 tile.RightNeighbor = new CartesianCoordinates(x + 1, y);
                 tile.LeftNeighbor = new CartesianCoordinates(x - 1, y);
+
+                //TODO: determine lifecycle
+                tile.isAlive = new System.Random().NextDouble() >= 0.5; //TESTING COLORS
+
+                //Set lifecycle
+                if (tile.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+                {
+                    if (!tile.isAlive)
+                    {
+                        spriteRenderer.color = Color.black;
+                    }
+                    else
+                    {
+                        spriteRenderer.color = Color.white;
+                    }
+                }
+
+
+
 
                 Instantiate(tile, position, Quaternion.identity);
 
