@@ -77,6 +77,7 @@ public class GenerateGrid : MonoBehaviour
                 // seed the grid
                 tile.isAlive = new System.Random().NextDouble() >= 0.5; //TESTING COLORS
 
+
                 //TODO: determine lifecycle
                 //Set lifecycle
                 if (tile.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
