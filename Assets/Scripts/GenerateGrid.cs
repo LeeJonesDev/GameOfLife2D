@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,18 +33,22 @@ public class GenerateGrid : MonoBehaviour
 
     }
 
-
-    /* TODO: camera isn't working quite like i want :(, but i got it positioned on 
-        the grid but don't love the math here or the positioning but it works well 
-        enough to move on for now and make it better later after I have the guts working.
-    */
+    /// <summary>
+    /// Gets the camera viewport to contain the whole grid
+    /// </summary>
     private void SetupCamera()
     {
         var camera = GameObject.Find("Main Camera");
         camera.transform.position = new Vector3(
-            TileWidth * ((GameHeight - 1) / 2),
-            TileWidth * ((GameWidth - 1) / 2),
+            TileWidth * GameHeight / 2,
+            TileWidth * GameWidth / 2,
             -1);
+
+        if (camera.TryGetComponent<Camera>(out var cameraComponent))
+        {
+            var maxSize = Math.Max(GameWidth, GameHeight);
+            cameraComponent.orthographicSize = TileWidth * maxSize / 2 + TileWidth;
+        }
     }
 
     private void GenerateCartesianGrid()
