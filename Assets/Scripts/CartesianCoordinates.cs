@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class CartesianCoordinates : MonoBehaviour
+[System.Serializable]
+public struct CartesianCoordinates
 {
     public int X;
     public int Y;
