@@ -8,6 +8,7 @@ public class ButtonBehavior : MonoBehaviour
     bool _isActive;
     float _time;
 
+
     void Start()
     {
         _isActive = false;
@@ -48,6 +49,7 @@ public class ButtonBehavior : MonoBehaviour
         {
             var gameTiles = FindObjectsOfType<GameTile>().ToList();
 
+            //TODO: do this recursively? it may simplify logic / iterations
             // Get the future states
             foreach (var tile in gameTiles)
             {

@@ -1,3 +1,4 @@
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -20,7 +21,8 @@ public class GameTile : MonoBehaviour
     public CartesianCoordinates BelowNeighborCoords;
     public GameTile BelowNeighborTile;
 
-    //TODO: this isn't quite right!! There is an edge case that I'm forgetting
+
+    //TODO: this isn't quite right!
     public bool DetermineIfShouldLive()
     {
         var sumLiveNeighbors = 0 +
@@ -36,7 +38,8 @@ public class GameTile : MonoBehaviour
         var isUnderPopulated = sumLiveNeighbors < 2;
 
         //has 2 or 3 live neighbors, can live if alive
-        var isSustained = sumLiveNeighbors > 1 && sumLiveNeighbors < 4;
+        var sustainableNeighbors = new[] { 2, 3 };
+        var isSustained = sustainableNeighbors.Contains(sumLiveNeighbors);
 
         //has more than 3 live neighbors, can die if alive
         var isOverpopulated = sumLiveNeighbors == 4;
@@ -53,7 +56,7 @@ public class GameTile : MonoBehaviour
                 return true;
             }
 
-            return false; // 1, 2, 4
+            return false; // 0, 1, 2, 4
         }
 
         // alive state changes
@@ -69,7 +72,7 @@ public class GameTile : MonoBehaviour
                 return false;
             }
 
-            if (isUnderPopulated) // 1
+            if (isUnderPopulated) // 0, 1
             {
                 return false;
             }

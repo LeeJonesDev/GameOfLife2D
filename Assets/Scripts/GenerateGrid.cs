@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -73,7 +74,6 @@ public class GenerateGrid : MonoBehaviour
                 // change the name of the GameObject to be human readable
                 tile.gameObject.name = $"Tile - {x}, {y} ";
 
-                // TODO: handle grid edges?
                 // generate the neighbors
                 tile.AboveNeighborCoords = new CartesianCoordinates(x, y + 1);
                 tile.BelowNeighborCoords = new CartesianCoordinates(x, y - 1);
@@ -82,7 +82,6 @@ public class GenerateGrid : MonoBehaviour
 
                 // seed the grid with random starting data
                 tile.isAlive = new System.Random().NextDouble() >= 0.25;
-
 
                 //Set life status
                 if (tile.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
@@ -96,33 +95,43 @@ public class GenerateGrid : MonoBehaviour
                     throw new MissingComponentException("No SpriteRenderer on Grid Generator");
                 }
 
-                // TODO: can this be async? (I don't think it works right)
+                // TODO: can this be async? (I don't think async works right)
                 Instantiate(tile, position, Quaternion.identity);
 
             }
         }
 
-        // Note: aww, I just read unity is not thread safe, this should be parallel though.
         //Set neighbor tiles
-        var gameTiles = FindObjectsOfType<GameTile>();
-        for (int i = 0; i < gameTiles.Length; i++)
+        var gameTiles = FindObjectsOfType<GameTile>().ToList();
+        for (int i = 0; i < gameTiles.Count; i++)
         {
             GameTile tile = gameTiles[i];
-            tile.AboveNeighborTile = gameTiles.SingleOrDefault(t =>
+            UpdateNeighborGameTilesFromNeighborCoords(tile, gameTiles);
+        }
+    }
+
+    /// <summary>
+    /// update neighbor tiles by reference
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="gameTiles"></param>
+    /// <returns></returns>
+    public void UpdateNeighborGameTilesFromNeighborCoords(GameTile tile, List<GameTile> gameTiles)
+    {
+        tile.AboveNeighborTile = gameTiles.SingleOrDefault(t =>
                 t.Coordinates.X == tile.AboveNeighborCoords.X &&
                 t.Coordinates.Y == tile.AboveNeighborCoords.Y);
 
-            tile.BelowNeighborTile = gameTiles.SingleOrDefault(t =>
-                t.Coordinates.X == tile.BelowNeighborCoords.X &&
-                t.Coordinates.Y == tile.BelowNeighborCoords.Y);
+        tile.BelowNeighborTile = gameTiles.SingleOrDefault(t =>
+            t.Coordinates.X == tile.BelowNeighborCoords.X &&
+            t.Coordinates.Y == tile.BelowNeighborCoords.Y);
 
-            tile.LeftNeighborTile = gameTiles.SingleOrDefault(t =>
-                t.Coordinates.X == tile.LeftNeighborCoords.X &&
-                t.Coordinates.Y == tile.LeftNeighborCoords.Y);
+        tile.LeftNeighborTile = gameTiles.SingleOrDefault(t =>
+            t.Coordinates.X == tile.LeftNeighborCoords.X &&
+            t.Coordinates.Y == tile.LeftNeighborCoords.Y);
 
-            tile.RightNeighborTile = gameTiles.SingleOrDefault(t =>
-                t.Coordinates.X == tile.RightNeighborCoords.X &&
-                t.Coordinates.Y == tile.RightNeighborCoords.Y);
-        }
+        tile.RightNeighborTile = gameTiles.SingleOrDefault(t =>
+            t.Coordinates.X == tile.RightNeighborCoords.X &&
+            t.Coordinates.Y == tile.RightNeighborCoords.Y);
     }
 }
