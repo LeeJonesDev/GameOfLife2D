@@ -19,18 +19,9 @@ public class GenerateGrid : MonoBehaviour
     {
         SetupCamera();
 
-        //TODO: this is not performant, may need to store neighbors in 2D array or something instead of the game objects?
         //TODO: this is not performant, may need to instantiate objects differently or just do more research to understand why
         //TODO: nest generated tiles under an empty game object or something... clutter clutter clutter...
         GenerateCartesianGrid();
-
-        //TODO: implement algorithm
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     /// <summary>
@@ -93,8 +84,7 @@ public class GenerateGrid : MonoBehaviour
                 tile.isAlive = new System.Random().NextDouble() >= 0.25;
 
 
-                //TODO: determine lifecycle
-                //Set lifecycle
+                //Set life status
                 if (tile.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
                 {
                     spriteRenderer.color = !tile.isAlive
@@ -106,7 +96,7 @@ public class GenerateGrid : MonoBehaviour
                     throw new MissingComponentException("No SpriteRenderer on Grid Generator");
                 }
 
-                // TODO: can this be async?
+                // TODO: can this be async? (I don't think it works right)
                 Instantiate(tile, position, Quaternion.identity);
 
             }
