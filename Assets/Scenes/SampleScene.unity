@@ -509,6 +509,18 @@ PrefabInstance:
       propertyPath: GameHeight
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 5578148732636427118, guid: e714a41d2039444449a865420af77663, type: 3}
+      propertyPath: IterationInterval
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5578148732636427118, guid: e714a41d2039444449a865420af77663, type: 3}
+      propertyPath: IterationIntervalInMs
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5578148732636427118, guid: e714a41d2039444449a865420af77663, type: 3}
+      propertyPath: IterationIntervalInSeconds
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8468497201085783196, guid: e714a41d2039444449a865420af77663, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -681,6 +693,10 @@ PrefabInstance:
     - target: {fileID: 702776414758765656, guid: 7f8b7a0ee88a5e642b36d0133fa587c0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4219330990724834889, guid: 7f8b7a0ee88a5e642b36d0133fa587c0, type: 3}
+      propertyPath: IterationIntervalInSeconds
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7899796725877578654, guid: 7f8b7a0ee88a5e642b36d0133fa587c0, type: 3}
       propertyPath: m_Name

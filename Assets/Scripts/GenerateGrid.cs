@@ -51,7 +51,7 @@ public class GenerateGrid : MonoBehaviour
         }
         else
         {
-            throw new MissingComponentException("missing camera on the main camera. we have a problem...");
+            throw new MissingComponentException("missing camera on the main camera. we have a bigger problem here...");
         }
     }
 
@@ -90,7 +90,7 @@ public class GenerateGrid : MonoBehaviour
                 tile.LeftNeighborCoords = new CartesianCoordinates(x - 1, y);
 
                 // seed the grid with random starting data
-                tile.isAlive = new System.Random().NextDouble() >= 0.5;
+                tile.isAlive = new System.Random().NextDouble() >= 0.25;
 
 
                 //TODO: determine lifecycle
