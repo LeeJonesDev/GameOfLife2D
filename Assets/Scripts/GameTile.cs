@@ -1,4 +1,3 @@
-using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -22,9 +21,12 @@ public class GameTile : MonoBehaviour
     public GameTile BelowNeighborTile;
 
 
-    //TODO: this isn't quite right!
+    //TODO: I'm not so sure my algorithm is right, it's not behaving quite like i remember from school, 
+    //TODO: I got to the algorithm later sadly as I was brushing up on my Unity a bit, but it was a blast!
+    //TODO: There is a remote possibility that it may be input though as I'm using random input, but I think it's bad logic
     public bool DetermineIfShouldLive()
     {
+        //if neighbors exist, check their life status and add to sum
         var sumLiveNeighbors = 0 +
             (LeftNeighborTile != null && LeftNeighborTile.isAlive ? 1 : 0) +
             (RightNeighborTile != null && RightNeighborTile.isAlive ? 1 : 0) +
@@ -38,11 +40,11 @@ public class GameTile : MonoBehaviour
         var isUnderPopulated = sumLiveNeighbors < 2;
 
         //has 2 or 3 live neighbors, can live if alive
-        var sustainableNeighbors = new[] { 2, 3 };
-        var isSustained = sustainableNeighbors.Contains(sumLiveNeighbors);
+
+        var isSustained = sumLiveNeighbors == 2 || sumLiveNeighbors == 3;
 
         //has more than 3 live neighbors, can die if alive
-        var isOverpopulated = sumLiveNeighbors == 4;
+        var isOverpopulated = sumLiveNeighbors > 3;
 
         // has exactly 3 live neighbors, can revive if dead
         var hasSpawn = sumLiveNeighbors == 3;

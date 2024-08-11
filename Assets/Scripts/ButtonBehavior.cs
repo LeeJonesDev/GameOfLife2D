@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ButtonBehavior : MonoBehaviour
 {
-    // typlically set to 0.5 for 500 ms
+    // typically set to 0.5 for 500 ms
     public float IterationIntervalInSeconds;
     bool _isActive;
     float _time;
@@ -12,15 +12,17 @@ public class ButtonBehavior : MonoBehaviour
     void Start()
     {
         _isActive = false;
+        _time = 0;
     }
 
     void Update()
     {
-        //TODO: this timing isn't right, revisit that math.
+        //TODO: this timing isn't right I don't think? probably need a while loop
         if (_isActive)
         {
             _time += Time.deltaTime;
 
+            // essentially i think this works like a semaphore
             if (_time >= IterationIntervalInSeconds)
             {
                 PerformIteration();
@@ -32,13 +34,11 @@ public class ButtonBehavior : MonoBehaviour
     public void OnStartButtonClick()
     {
         _isActive = true;
-        _time = 0;
     }
 
     //TODO: this is not working, revisit
     public void OnStopButtonClick()
     {
-        Debug.Log("clicked stop.");
         _isActive = false;
         _time = 0;
     }

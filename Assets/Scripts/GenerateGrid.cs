@@ -20,8 +20,6 @@ public class GenerateGrid : MonoBehaviour
     {
         SetupCamera();
 
-        //TODO: this is not performant, may need to instantiate objects differently or just do more research to understand why
-        //TODO: nest generated tiles under an empty game object or something... clutter clutter clutter...
         GenerateCartesianGrid();
     }
 
@@ -56,48 +54,32 @@ public class GenerateGrid : MonoBehaviour
         {
             for (var x = 0; x < GameWidth; x++)
             {
-                //calculate the position of the tile
-                Vector3 position;
-                position.x = TileWidth * x;
-                position.y = TileWidth * y;
-                position.z = 0.1f;
+                Vector3 position = GeneratePositionOfTile(x, y);
 
                 var tile = GameTilePrefab;
-
 
                 // note: only using width because these are square tiles
                 tile.transform.localScale = new Vector3(TileWidth, TileWidth, 1);
 
-                // set the base coordinates for the tile
-                tile.Coordinates = new CartesianCoordinates(x, y);
+                SetCoordinatesForTile(tile, x, y);
 
                 // change the name of the GameObject to be human readable
                 tile.gameObject.name = $"Tile - {x}, {y} ";
 
-                // generate the neighbors
-                tile.AboveNeighborCoords = new CartesianCoordinates(x, y + 1);
-                tile.BelowNeighborCoords = new CartesianCoordinates(x, y - 1);
-                tile.RightNeighborCoords = new CartesianCoordinates(x + 1, y);
-                tile.LeftNeighborCoords = new CartesianCoordinates(x - 1, y);
-
                 // seed the grid with random starting data
                 tile.isAlive = new System.Random().NextDouble() >= 0.25;
 
-                //Set life status
-                if (tile.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+                try
                 {
-                    spriteRenderer.color = !tile.isAlive
-                        ? Color.black
-                        : Color.white;
+                    SetTileColorBaseOnLifeStatus(tile);
+
+                    Instantiate(tile, position, Quaternion.identity);
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new MissingComponentException("No SpriteRenderer on Grid Generator");
+                    Debug.Log(ex.Message);
+                    throw;
                 }
-
-                // TODO: can this be async? (I don't think async works right)
-                Instantiate(tile, position, Quaternion.identity);
-
             }
         }
 
@@ -107,6 +89,55 @@ public class GenerateGrid : MonoBehaviour
         {
             GameTile tile = gameTiles[i];
             UpdateNeighborGameTilesFromNeighborCoords(tile, gameTiles);
+        }
+    }
+
+    /// <summary>
+    /// calculate the position of the tile
+    /// </summary>
+    public Vector3 GeneratePositionOfTile(int x, int y)
+    {
+        Vector3 position;
+        position.x = TileWidth * x;
+        position.y = TileWidth * y;
+        position.z = 0.1f;
+
+        return position;
+    }
+
+    /// <summary>
+    /// Update all the coordinate for the tile by reference
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void SetCoordinatesForTile(GameTile tile, int x, int y)
+    {
+        // set the base coordinates for the tile
+        tile.Coordinates = new CartesianCoordinates(x, y);
+
+        // generate the neighbor's coordinates
+        tile.AboveNeighborCoords = new CartesianCoordinates(x, y + 1);
+        tile.BelowNeighborCoords = new CartesianCoordinates(x, y - 1);
+        tile.RightNeighborCoords = new CartesianCoordinates(x + 1, y);
+        tile.LeftNeighborCoords = new CartesianCoordinates(x - 1, y);
+    }
+
+    /// <summary>
+    /// Update tile color based on life status by reference
+    /// </summary>
+    /// <exception cref="MissingComponentException"></exception>
+    public void SetTileColorBaseOnLifeStatus(GameTile tile)
+    {
+        if (tile.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+        {
+            spriteRenderer.color = !tile.isAlive
+                ? Color.black
+                : Color.white;
+        }
+        else
+        {
+            throw new MissingComponentException("No SpriteRenderer on Grid Generator");
         }
     }
 

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 [System.Serializable] //allows this struct to display in UI
 public struct CartesianCoordinates
 {
