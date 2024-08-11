@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class ButtonBehavior : MonoBehaviour
 {
+    // typlically set to 0.5 for 500 ms
+    public float IterationIntervalInSeconds;
     bool _isActive;
     float _time;
-    public float IterationIntervalInSeconds;
 
     void Start()
     {
@@ -14,7 +15,7 @@ public class ButtonBehavior : MonoBehaviour
 
     void Update()
     {
-        //TODO: this timing isn't right
+        //TODO: this timing isn't right, revisit that math.
         if (_isActive)
         {
             _time += Time.deltaTime;
@@ -33,7 +34,7 @@ public class ButtonBehavior : MonoBehaviour
         _time = 0;
     }
 
-    //TODO: this is not working
+    //TODO: this is not working, revisit
     public void OnStopButtonClick()
     {
         Debug.Log("clicked stop.");
@@ -47,20 +48,16 @@ public class ButtonBehavior : MonoBehaviour
         {
             var gameTiles = FindObjectsOfType<GameTile>().ToList();
 
+            // Get the future states
             foreach (var tile in gameTiles)
             {
-                //TODO: get current state
-                //tile.isAlive;
-                //TODO: check whether should live or die and save the future state for updating later    
                 tile.shouldLive = tile.DetermineIfShouldLive();
             }
 
-            //TODO: update states
-            //update all the tiles shouldlives to isalives
+            // Reiterate :( and get set the current states now that we have all the future states
             foreach (var tile in gameTiles)
             {
                 tile.isAlive = tile.shouldLive;
-
                 var spriteRenderer = tile.GetComponentInParent<SpriteRenderer>();
                 spriteRenderer.color = !tile.isAlive
                     ? Color.black
@@ -68,25 +65,4 @@ public class ButtonBehavior : MonoBehaviour
             }
         }
     }
-
-
-    public (int gridHeight, int gridWidth) GetGridDimensions()
-    {
-        int gameHeight, gameWidth;
-
-        var gridGenerator = GameObject.Find("Grid Generator");
-        if (gridGenerator.gameObject.TryGetComponent<GenerateGrid>(out var gridGenScript))
-        {
-            gameHeight = gridGenScript.GameHeight;
-            gameWidth = gridGenScript.GameWidth;
-        }
-        else
-        {
-            throw new MissingComponentException("Grid Generator is missing the grid generation script");
-        }
-
-        return (gameHeight, gameWidth);
-    }
-
-
 }
