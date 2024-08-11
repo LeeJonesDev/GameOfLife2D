@@ -1,61 +1,74 @@
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ButtonBehavior : MonoBehaviour
 {
+    bool _isActive;
+    float _time;
+    public float IterationIntervalInSeconds;
+
+    void Start()
+    {
+        _isActive = false;
+    }
+
+    void Update()
+    {
+        //TODO: this timing isn't right
+        if (_isActive)
+        {
+            _time += Time.deltaTime;
+
+            if (_time >= IterationIntervalInSeconds)
+            {
+                PerformIteration();
+                _time -= IterationIntervalInSeconds;
+            }
+        }
+    }
 
     public void OnStartButtonClick()
     {
-        Debug.Log("clicked start.");
-
-
-        // var (gameHeight, gameWidth) = GetGridDimensions();
-
-        // //Iteration
-        // var states = new List<(bool isAlive, bool newState, CartesianCoordinates coordinates)>();
-
-        // //TODO: recursion?
-        // for (var y = 0; y < (gameHeight - 1); y++)
-        // {
-        //     for (var x = 0; x < (gameWidth - 1); x++)
-        //     {
-
-        //         //TODO: get current state
-
-
-        //         //TODO: check whether should live or die and save the future state for updating later
-
-        //     }
-        // }
-        // //TODO: update state
-
-
-        var gameTiles = FindObjectsOfType<GameTile>();
-
-        foreach (var tile in gameTiles)
-        {
-            //TODO: get current state
-            //tile.isAlive;
-            //TODO: check whether should live or die and save the future state for updating later    
-            //tile.shouldLive = tile.DetermineIfShouldLive();
-        }
-
-        //TODO: update states
-        //update all the tiles shouldlives to isalives
-
-
+        _isActive = true;
+        _time = 0;
     }
 
+    //TODO: this is not working
     public void OnStopButtonClick()
     {
         Debug.Log("clicked stop.");
+        _isActive = false;
+        _time = 0;
     }
 
+    public void PerformIteration()
+    {
+        if (_isActive)
+        {
+            var gameTiles = FindObjectsOfType<GameTile>().ToList();
 
-    // public (bool isAlive, bool newState, CartesianCoordinates coordinates) CheckTile()
-    // {
-    //     var gridGenerator = ;
-    // }
+            foreach (var tile in gameTiles)
+            {
+                //TODO: get current state
+                //tile.isAlive;
+                //TODO: check whether should live or die and save the future state for updating later    
+                tile.shouldLive = tile.DetermineIfShouldLive();
+            }
+
+            //TODO: update states
+            //update all the tiles shouldlives to isalives
+            foreach (var tile in gameTiles)
+            {
+                tile.isAlive = tile.shouldLive;
+
+                var spriteRenderer = tile.GetComponentInParent<SpriteRenderer>();
+                spriteRenderer.color = !tile.isAlive
+                    ? Color.black
+                    : Color.white;
+            }
+        }
+    }
+
 
     public (int gridHeight, int gridWidth) GetGridDimensions()
     {
