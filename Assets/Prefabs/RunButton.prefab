@@ -258,7 +258,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5578148732636427118}
         m_TargetAssemblyTypeName: ButtonBehavior, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnStartButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -280,6 +280,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3060201b7fd5894ab91b242ba6a89ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameTilePrefab: {fileID: -8047379092812908120, guid: c69e12b5f4f441448ad5385236a697c1, type: 3}
-  GameWidth: 100
-  GameHeight: 100
+  IterationIntervalInSeconds: 0.5
